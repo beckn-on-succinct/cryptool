@@ -1,3 +1,5 @@
+package in.succinct.crypt;
+
 import com.venky.core.security.Crypt;
 import com.venky.core.util.ObjectUtil;
 import org.apache.commons.cli.CommandLine;
