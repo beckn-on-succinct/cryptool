@@ -1,0 +1,19 @@
+path="/subjects/dns/succinct.in/verification_methods" 
+method="get"
+
+
+created=`date "+%s"`
+signing_string=`printf "(request-target): ${method} ${path}\n(created): $created"`
+
+
+signature=`bin/signertool -a Ed25519 -d "${signing_string}"  -o sign  -v "MFECAQEwBQYDK2VwBCIEIBhrO1GO2ea8El26FRTT8ScwXXWrp6NZYI80kVQIkJ1bgSEAH79RaYab72074/IUymmRnLJxDfhYRyIDimbpzcSYpSA="` 
+
+
+
+
+echo 'AUTHORIZATION: Signature keyId="/subjects/dns/succinct.in/verification_methods/020284ee-52ed-4d10-bd50-dfc21cecff2d",algorithm="ed25519",created="'${created}'",headers="(request-target) (created)",signature="'$signature'"'
+
+
+echo "Verifying" 
+bin/signertool -a Ed25519 -d "${signing_string}"  -o verify  -s "$signature" -p "MCowBQYDK2VwAyEAH79RaYab72074/IUymmRnLJxDfhYRyIDimbpzcSYpSA="
+

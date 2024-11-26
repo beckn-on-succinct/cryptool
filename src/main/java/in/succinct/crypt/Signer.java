@@ -26,6 +26,7 @@ public class Signer {
         String data = commandLine.getOptionValue("d");
         String operation = commandLine.getOptionValue("o");
         String algo = commandLine.getOptionValue("a");
+        System.err.printf("|%s|Length %d%n", data,data.length());
         
         if (ObjectUtil.equals(operation,"verify")){
             String pub = commandLine.getOptionValue("p");
