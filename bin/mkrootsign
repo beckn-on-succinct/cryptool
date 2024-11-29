@@ -1,11 +1,10 @@
 auth_header(){ 
     path="$1"
-    method="post"
+    method="delete"
 
-    v="MFECAQEwBQYDK2VwBCIEIBhrO1GO2ea8El26FRTT8ScwXXWrp6NZYI80kVQIkJ1bgSEAH79RaYab72074/IUymmRnLJxDfhYRyIDimbpzcSYpSA="
-    p="MCowBQYDK2VwAyEAH79RaYab72074/IUymmRnLJxDfhYRyIDimbpzcSYpSA="
-
-    kid=/subjects/companies/humbhionline.in/verification_methods/5feb3eff-d478-4ce7-bb93-2f3b8f1c07f5
+    v="MFECAQEwBQYDK2VwBCIEIDQtfXTAlr5cWvWLSUJpBQg7eORU2v5db7qcnw5LgzL2gSEAFEB/CQJ8zSKOYDbM3vvIoPg8NvVk8VKsumfZNib2bjA="
+    p="MCowBQYDK2VwAyEAFEB/CQJ8zSKOYDbM3vvIoPg8NvVk8VKsumfZNib2bjA="
+    kid=/subjects/defs.humbhionline.in/verification_methods/defs.humbhionline.in.k1.Ed25519
 
 
     created=`date "+%s"`
