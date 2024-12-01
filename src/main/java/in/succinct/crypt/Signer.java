@@ -1,14 +1,20 @@
 package in.succinct.crypt;
 
 import com.venky.core.security.Crypt;
+import com.venky.core.string.StringUtil;
 import com.venky.core.util.ObjectUtil;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
+
 public class Signer {
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
         Options options = getOptions();
         
         DefaultParser parser= new DefaultParser();
@@ -23,10 +29,10 @@ public class Signer {
         
         if (commandLine == null) throw new AssertionError( "Incorrect usage!");
         
-        String data = commandLine.getOptionValue("d");
+        String datafile = commandLine.getOptionValue("d");
         String operation = commandLine.getOptionValue("o");
         String algo = commandLine.getOptionValue("a");
-        //System.err.printf("|%s|Length %d%n", data,data.length());
+        byte[] data = StringUtil.readBytes(datafile == null ? System.in : new FileInputStream(datafile));
         
         if (ObjectUtil.equals(operation,"verify")){
             String pub = commandLine.getOptionValue("p");
@@ -51,7 +57,7 @@ public class Signer {
         options.addOption(option);
         
         option = new Option("d","data",true, "Exact Data to sign or verify");
-        option.setRequired(true);
+        option.setRequired(false);
         option.setArgs(1);
         options.addOption(option);
         

@@ -1,21 +1,44 @@
 auth_header(){ 
     path="$1"
-    method="post"
+    method="$2"
+    hashAlgo="BLAKE2B-512"
 
     v="MFECAQEwBQYDK2VwBCIEIBhrO1GO2ea8El26FRTT8ScwXXWrp6NZYI80kVQIkJ1bgSEAH79RaYab72074/IUymmRnLJxDfhYRyIDimbpzcSYpSA="
     p="MCowBQYDK2VwAyEAH79RaYab72074/IUymmRnLJxDfhYRyIDimbpzcSYpSA="
 
-    kid=/subjects/companies/humbhionline.in/verification_methods/5feb3eff-d478-4ce7-bb93-2f3b8f1c07f5
+    kid=/subjects/companies/humbhionline.in/verification_methods/03091c39-31f2-4ac1-a4f7-c1a576438b31
+
+    headers="(request-target) (created)"
+    signature_headers='keyId="'$kid'",algorithm="ed25519"'
+
+
+
+    if [ "$payload" != "" -a "$hashAlgo" != "" ]
+    then 
+        headers="$headers digest"
+        digest=`bin/hashtool -d "$payload" -h "${hashAlgo}"`
+        signature_headers="${signature_headers}"
+    fi 
 
 
     created=`date "+%s"`
-    signing_string=`printf "(request-target): ${method} ${path}\n(created): $created"`
+    signature_headers="${signature_headers},created=\"${created}\",headers=\"${headers}\""
+
+    if [ "${digest}" != "" ]
+    then
+        signing_string=`printf "(request-target): ${method} ${path}\n(created): ${created}\ndigest: BLAKE-512=${digest}"`
+
+    else
+        signing_string=`printf "(request-target): ${method} ${path}\n(created): ${created}"`
+    fi
 
 
-    signature=`bin/signertool -a Ed25519 -d "${signing_string}"  -o sign  -v "${v}"` 
+    signature=`printf "${signing_string}" | bin/signertool -a Ed25519 -o sign  -v "${v}"` 
 
-    echo 'AUTHORIZATION: Signature keyId="'${kid}'",algorithm="ed25519",created="'${created}'",headers="(request-target) (created)",signature="'$signature'"'
+    signature_headers="$signature_headers,signature=\"${signature}\""
 
-    bin/signertool -a Ed25519 -d "${signing_string}"  -o verify  -s "$signature" -p "${p}" 
+    echo 'AUTHORIZATION: Signature '${signature_headers}''
+
+    printf "${signing_string}" | bin/signertool -a Ed25519   -o verify  -s "$signature" -p "${p}" 
 }
 auth_header $@

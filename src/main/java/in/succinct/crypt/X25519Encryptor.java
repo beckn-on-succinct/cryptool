@@ -1,6 +1,7 @@
 package in.succinct.crypt;
 
 import com.venky.core.security.Crypt;
+import com.venky.core.string.StringUtil;
 import com.venky.core.util.ObjectUtil;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -18,6 +19,8 @@ import org.bouncycastle.jcajce.spec.XDHParameterSpec;
 import javax.crypto.KeyAgreement;
 import javax.crypto.SecretKey;
 import javax.security.auth.Subject;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -28,7 +31,7 @@ import java.util.Base64;
 import java.util.logging.Logger;
 
 public class X25519Encryptor {
-    public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException {
+    public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException , IOException {
         Options options = getOptions();
         
         DefaultParser parser= new DefaultParser();
@@ -43,15 +46,18 @@ public class X25519Encryptor {
         
         if (commandLine == null) throw new AssertionError( "Incorrect usage!");
         
-        String data = commandLine.getOptionValue("d");
+        String dataFile = commandLine.getOptionValue("d");
         String operation = commandLine.getOptionValue("o");
         String pub = commandLine.getOptionValue("p");
         String pvt = commandLine.getOptionValue("v");
+        //byte[] data = StringUtil.readBytes(new FileInputStream(dataFile));
+        byte[] data = StringUtil.readBytes(dataFile == null ? System.in : new FileInputStream(dataFile));
+        
         
         if (ObjectUtil.equals(operation,"encrypt")){
-           System.out.println(encrypt(data.getBytes(StandardCharsets.UTF_8),pub,pvt));
+           System.out.println(encrypt(data,pub,pvt));
         }else if (ObjectUtil.equals(operation,"decrypt")){
-            System.out.println(decrypt(data.getBytes(StandardCharsets.UTF_8),pub,pvt));
+            System.out.println(decrypt(data,pub,pvt));
         }else {
             throw new RuntimeException("Invalid operation");
         }
@@ -105,7 +111,7 @@ public class X25519Encryptor {
         options.addOption(option);
         
         option = new Option("d","data",true, "Exact payload");
-        option.setRequired(true);
+        option.setRequired(false);
         option.setArgs(1);
         options.addOption(option);
         

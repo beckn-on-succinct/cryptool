@@ -1,2 +1,6 @@
-#DEBUG_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=10000"
+if [ "$suspend" = "" ]
+then 
+    suspend = "n"
+fi
+#DEBUG_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=${suspend},address=10000"
 java $DEBUG_OPTS -cp 'target/cryptool-1.0-SNAPSHOT.jar:target/dependency/*' in.succinct.crypt.X25519Encryptor "$@"
