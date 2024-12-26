@@ -1,12 +1,21 @@
+load_keys(){
+    if [ "$keyfile" = "" ] 
+    then 
+        echo "keyfile not passed" 
+        exit 1;
+    fi
+
+
+    export kid=`jq -r '.kid' ${keyfile}`
+    export v=`jq -r '.private_key' ${keyfile}`
+    export p=`jq -r '.public_key' ${keyfile}`
+}
 auth_header(){ 
     path="$1"
     method="$2"
+    keyfile="$3" 
     hashAlgo="BLAKE2B-512"
-
-    v="MFECAQEwBQYDK2VwBCIEIBhrO1GO2ea8El26FRTT8ScwXXWrp6NZYI80kVQIkJ1bgSEAH79RaYab72074/IUymmRnLJxDfhYRyIDimbpzcSYpSA="
-    p="MCowBQYDK2VwAyEAH79RaYab72074/IUymmRnLJxDfhYRyIDimbpzcSYpSA="
-
-    kid=/subjects/companies/humbhionline.in/verification_methods/03091c39-31f2-4ac1-a4f7-c1a576438b31
+    load_keys
 
     headers="(request-target) (created)"
     signature_headers='keyId="'$kid'",algorithm="ed25519"'
@@ -34,6 +43,8 @@ auth_header(){
 
 
     signature=`printf "${signing_string}" | bin/signertool -a Ed25519 -o sign  -v "${v}"` 
+
+    echo "--Siging String--\n${signing_string}\n----"
 
     signature_headers="$signature_headers,signature=\"${signature}\""
 
