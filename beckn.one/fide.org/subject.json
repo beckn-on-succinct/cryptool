@@ -1,0 +1,6 @@
+{ "name" : "org/fide.org" , 
+    "verification_methods" : [{"public_key":"MCowBQYDK2VwAyEAAK0CtDFVA4KTybUVq40AOMFGL0fZoNlEeWdo1ScacfI=", 
+    "hashing_algorithm" :"Blake512", 
+    "purpose": "Authentication" , 
+    "type" : "Ed25519"  }] 
+}
