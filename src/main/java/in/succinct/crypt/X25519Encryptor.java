@@ -8,27 +8,15 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
-import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
-import org.bouncycastle.crypto.params.X25519PrivateKeyParameters;
-import org.bouncycastle.internal.asn1.edec.EdECObjectIdentifiers;
-import org.bouncycastle.jcajce.interfaces.XDHPrivateKey;
-import org.bouncycastle.jcajce.provider.asymmetric.edec.BCXDHPrivateKey;
-import org.bouncycastle.jcajce.spec.XDHParameterSpec;
 
 import javax.crypto.KeyAgreement;
 import javax.crypto.SecretKey;
-import javax.security.auth.Subject;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
-import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Base64;
-import java.util.logging.Logger;
 
 public class X25519Encryptor {
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException , IOException {
@@ -70,7 +58,7 @@ public class X25519Encryptor {
         
         PrivateKey pvKey = getEncryptionPrivateKey(privateKey);
         
-        KeyAgreement agreement = KeyAgreement.getInstance(XDHParameterSpec.X25519);
+        KeyAgreement agreement = KeyAgreement.getInstance("X25519");
         agreement.init(pvKey);
         agreement.doPhase(pbKey, true);
         return agreement.generateSecret("TlsPremasterSecret");
@@ -82,23 +70,10 @@ public class X25519Encryptor {
     }
     
     public static PrivateKey getEncryptionPrivateKey(String keyPassed){
-        return Crypt.getInstance().getPrivateKey(XDHParameterSpec.X25519, keyPassed);
+        return Crypt.getInstance().getPrivateKey("X25519", keyPassed);
     }
     public static PublicKey getEncryptionPublicKey(String keyFromRegistry){
-        PublicKey publicKey = null;
-        try {
-            publicKey = Crypt.getInstance().getPublicKey(XDHParameterSpec.X25519, keyFromRegistry);
-        }catch (Exception ex){
-            try {
-                byte[] bcBytes = Base64.getDecoder().decode(keyFromRegistry);
-                byte[] jceBytes = new SubjectPublicKeyInfo(new AlgorithmIdentifier(EdECObjectIdentifiers.id_X25519), bcBytes).getEncoded();
-                String pemKey = Base64.getEncoder().encodeToString(jceBytes);
-                publicKey = Crypt.getInstance().getPublicKey(XDHParameterSpec.X25519,pemKey);
-            }catch (Exception jceEx){
-                //publicKey =  null;
-            }
-        }
-        return publicKey;
+        return Crypt.getInstance().getPublicKey("X25519", keyFromRegistry);
     }
     
     
