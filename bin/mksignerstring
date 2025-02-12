@@ -9,11 +9,13 @@ load_keys(){
     export kid=`jq -r '.kid' ${keyfile}`
     export v=`jq -r '.private_key' ${keyfile}`
     export p=`jq -r '.public_key' ${keyfile}`
+    echo "Extracted from key file: $kid $v $p"
 }
 auth_header(){ 
     path="$1"
     method="$2"
     keyfile="$3" 
+    echo "Keyfile ${keyfile}"
     hashAlgo="BLAKE2B-512"
     load_keys
 
@@ -21,7 +23,7 @@ auth_header(){
     signature_headers='keyId="'$kid'",algorithm="ed25519"'
 
 
-
+    echo "PayLoad: $payload"
     if [ "$payload" != "" -a "$hashAlgo" != "" ]
     then 
         headers="$headers digest"
@@ -31,6 +33,10 @@ auth_header(){
 
 
     created=`date "+%s"`
+
+    #For debugging 
+    #created="1739293820"
+
     signature_headers="${signature_headers},created=\"${created}\",headers=\"${headers}\""
 
     if [ "${digest}" != "" ]
@@ -44,7 +50,9 @@ auth_header(){
 
     signature=`printf "${signing_string}" | bin/signertool -a Ed25519 -o sign  -v "${v}"` 
 
-    echo "--Siging String--\n${signing_string}\n----"
+echo "--Siging String--
+${signing_string}
+----"
 
     signature_headers="$signature_headers,signature=\"${signature}\""
 
