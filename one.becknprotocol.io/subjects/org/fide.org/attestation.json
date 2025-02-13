@@ -1,0 +1,9 @@
+{
+    "document" : {
+        "did" : "/subjects/org/fide.org/documents/bap.yaml"
+    },
+    "verification_method" : {
+        "did" : "/subjects/org/fide.org/verification_methods/f412c7eb-8009-4f62-b09c-df0ba42d263c" 
+    },
+    "signature" :"I/yBpJEJ9v/3wzbXsxHqQ0XUO9RF+fS8DHv1bijOWcnWYT+SEDzkq562lBt/CyHY5/7AxGMb4Xe1DaT5TDsUDQ=="
+}

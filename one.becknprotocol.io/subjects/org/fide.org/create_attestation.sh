@@ -1,0 +1,2 @@
+curl https://one.becknprotocol.io/subjects/org/fide.org/documents/bap.yaml/stream |bin/hashtool  -h BLAKE2B-512 |bin/signertool -a Ed25519 -o sign -v "MFECAQEwBQYDK2VwBCIEIIVeEQGv7GR/6W2EktmgA7yPXmeEjPwBcbgF8JzgfZBIgSEAAK0CtDFVA4KTybUVq40AOMFGL0fZoNlEeWdo1ScacfI="
+payload=./beckn.one/fide.org/attestation.json  bin/mksignerstring /subjects/org/fide.org/documents/bap.yaml/attestations post ./beckn.one/fide.org/kid.json

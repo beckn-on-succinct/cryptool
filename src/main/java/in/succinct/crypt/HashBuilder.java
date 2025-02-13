@@ -31,7 +31,7 @@ public class HashBuilder {
         //System.err.printf("|%s|Length %d%n", data,data.length());
         byte[] data = StringUtil.readBytes(dataFile == null ? System.in : new FileInputStream(dataFile));
         
-        System.out.println(Crypt.getInstance().toBase64(Crypt.getInstance().digest(algo,data)));
+        System.out.print(Crypt.getInstance().toBase64(Crypt.getInstance().digest(algo,data)));
     }
     
     private static Options getOptions() {
